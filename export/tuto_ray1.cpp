@@ -90,9 +90,9 @@ float oneFloat( )
 gk::Color direct( const gk::Point& p, const gk::Normal& n, const gk::MeshMaterial& material )
 {
     gk::Color color;
-    
-    // a completer
-    //~ { ... }
+    /*
+    std::cout << "Couleur " << material.ambient_color.r << " " << material.ambient_color.g << " " << material.ambient_color.b << std::endl;
+    color = material.ambient_color;*/
     
     return color;
 }
@@ -101,8 +101,7 @@ gk::Color indirect( const gk::Point& p, const gk::Normal& n, const gk::MeshMater
 {
     gk::Color color;
     
-    // a completer
-    //~ { ... }
+    
     
     return color;
 }
@@ -123,14 +122,6 @@ int main( )
    
     // definir les transformations
     gk::Transform model;
-    
-    /*
-        geometry
-            translate x y z
-            -221.766296 232.837692 575.962341 
-            rotate y x
-            -378.000000 -7.000000
-    */
     
     gk::Transform view= (gk::Translate( gk::Vector(-221.f, 232.f, 575.f) ) * gk::RotateX(-7.f) * gk::RotateY(-378.f)).inverse();
     gk::Transform projection= gk::Perspective(50.f, 1.f, 1.f, 1000.f);  // projection perspective
@@ -166,14 +157,16 @@ int main( )
                 gk::Point p= ray(hit.t);
                 gk::Normal normal= mesh->triangle(hit.object_id).normal();
                 gk::MeshMaterial material= mesh->triangleMaterial(hit.object_id);
+                std::cout << "Id = " << hit.object_id << std::endl;
 
                 // couleur "aleatoire", eventuellement
                 //~ material.diffuse_color= gk::Color(material.diffuse_color) * gk::Color(1.f - float(hit.object_id % 100) / 99.f, float(hit.object_id % 10) / 9.f, float(hit.object_id % 1000) / 999.f);       
                 
                 // calculer l'energie reflechie par le point vers la camera
                 // etape 1 : eclairage direct
-                //color= color + direct(p, normal, material);
-                color = gk::Color(1.f,1.f,1.f);
+                //color = color + direct(p, normal, material);
+
+                color = gk::Color((hit.object_id * 12)/255.f, ((hit.object_id * 42)%255)/255.f, (hit.object_id * 5)/255.f);
                 // etape 2 : eclairage indirect
                 //color= color + indirect(p, normal, material);
             }
